@@ -1,19 +1,15 @@
-import { v4 as uuid } from 'uuid';
-import { Entity } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('courses')
 class Course {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column()
   name: string;
 
-  image: string;
-
-  constructor({ name, image }: Omit<Course, 'id'>) {
-    this.id = uuid();
-    this.name = name;
-    this.image = image;
-  }
+  @Column()
+  image_id: string;
 }
 
 export default Course;

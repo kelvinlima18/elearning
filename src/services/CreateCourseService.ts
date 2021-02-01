@@ -1,29 +1,29 @@
+import { getCustomRepository } from 'typeorm';
+
 import Course from '../models/Course';
 import CoursesRepository from '../repositories/CoursesRepository';
 
 interface Request {
   name: string;
-  image: string;
+  image_id: string;
 }
 
 class CreateCourseService {
-  private coursesRepository: CoursesRepository;
+  public async execute({ name, image_id }: Request): Promise<Course> {
+    const coursesRepository = getCustomRepository(CoursesRepository);
 
-  constructor(coursesRepository: CoursesRepository) {
-    this.coursesRepository = coursesRepository;
-  }
-
-  public execute({ name, image }: Request): Course {
-    const findCourseInSameName = this.coursesRepository.findByName(name);
+    const findCourseInSameName = await coursesRepository.findByName(name);
 
     if (findCourseInSameName) {
       throw Error('This Course is already created');
     }
 
-    const course = this.coursesRepository.create({
+    const course = coursesRepository.create({
       name,
-      image,
+      image_id,
     });
+
+    await coursesRepository.save(course);
 
     return course;
   }

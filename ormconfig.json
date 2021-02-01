@@ -5,7 +5,10 @@
   "username": "postgres",
   "password": "docker",
   "database": "elearning",
-  "migration": [
+  "entities": [
+    "./src/models/*.ts"
+  ],
+  "migrations": [
     "./src/database/migrations/*.ts"
   ],
   "cli": {

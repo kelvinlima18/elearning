@@ -1,33 +1,15 @@
+import { EntityRepository, Repository } from 'typeorm';
+
 import Course from '../models/Course';
 
-interface CreateCourseDTO {
-  name: string;
-  image: string;
-}
-
-class CoursesRepository {
-  private courses: Course[];
-
-  constructor() {
-    this.courses = [];
-  }
-
-  public all(): Course[] {
-    return this.courses;
-  }
-
-  public findByName(name: string): Course | null {
-    const findCourse = this.courses.find(course => course.name === name);
+@EntityRepository(Course)
+class CoursesRepository extends Repository<Course> {
+  public async findByName(name: string): Promise<Course | null> {
+    const findCourse = await this.findOne({
+      where: { name },
+    });
 
     return findCourse || null;
-  }
-
-  public create({ name, image }: CreateCourseDTO): Course {
-    const course = new Course({ name, image });
-
-    this.courses.push(course);
-
-    return course;
   }
 }
 
