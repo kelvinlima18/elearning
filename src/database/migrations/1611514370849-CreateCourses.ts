@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export default class CreateCourses1611514370849 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -18,11 +18,6 @@ export default class CreateCourses1611514370849 implements MigrationInterface {
             type: 'varchar',
           },
           {
-            name: 'image_id',
-            type: 'uuid',
-            isNullable: true,
-          },
-          {
             name: 'created_at',
             type: 'timestamp',
             default: 'now()',
@@ -35,20 +30,9 @@ export default class CreateCourses1611514370849 implements MigrationInterface {
         ],
       }),
     );
-
-    await queryRunner.createForeignKey('courses', new TableForeignKey({
-      name: 'ImageCourses',
-      columnNames: ['image_id'],
-      referencedColumnNames: ['id'],
-      referencedTableName: 'image',
-      onDelete: 'SET NULL',
-      onUpdate: 'CASCADE',
-    }));
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('courses','ImageCourses');
-
-    await queryRunner.dropTable('courses');
+     await queryRunner.dropTable('courses');
   }
 }

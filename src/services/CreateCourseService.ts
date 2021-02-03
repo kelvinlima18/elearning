@@ -5,11 +5,10 @@ import CoursesRepository from '../repositories/CoursesRepository';
 
 interface Request {
   name: string;
-  image_id: string;
 }
 
 class CreateCourseService {
-  public async execute({ name, image_id }: Request): Promise<Course> {
+  public async execute({ name }: Request): Promise<Course> {
     const coursesRepository = getCustomRepository(CoursesRepository);
 
     const findCourseInSameName = await coursesRepository.findByName(name);
@@ -20,7 +19,6 @@ class CreateCourseService {
 
     const course = coursesRepository.create({
       name,
-      image_id,
     });
 
     await coursesRepository.save(course);
