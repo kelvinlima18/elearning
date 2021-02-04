@@ -3,6 +3,7 @@ import { getCustomRepository } from 'typeorm';
 import Course from '../models/Course';
 import CoursesRepository from '../repositories/CoursesRepository';
 
+import AppError from '../errors/AppError';
 interface Request {
   name: string;
 }
@@ -14,7 +15,7 @@ class CreateCourseService {
     const findCourseInSameName = await coursesRepository.findByName(name);
 
     if (findCourseInSameName) {
-      throw Error('This Course is already created');
+      throw new AppError('This Course is already created');
     }
 
     const course = coursesRepository.create({

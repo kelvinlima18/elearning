@@ -7,6 +7,9 @@ class Course {
   @Column()
   name: string;
 
+  @Column()
+  image: string;
+
   @CreateDateColumn()
   created_at: Date;
 
