@@ -1,12 +1,10 @@
 import { inject, injectable } from 'tsyringe';
-import path from 'path';
-import fs from 'fs';
 
 import Course from '@modules/courses/infra/typeorm/entities/Course';
 import AppError from '@shared/errors/AppError';
 
-import uploadConfig from '@config/upload';
 import ICoursesRepository from '@modules/courses/repositories/ICoursesRepository';
+import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
 
 interface RequestImage {
   course_id: string;
@@ -17,7 +15,10 @@ interface RequestImage {
 class UpdateImageService {
   constructor(
     @inject('CoursesRepository')
-    private coursesRepository: ICoursesRepository
+    private coursesRepository: ICoursesRepository,
+
+    @inject('StorageProvider')
+    private storageProvaider: IStorageProvider
   ) {}
 
   public async execute({ course_id, imageFileName }: RequestImage): Promise<Course> {
@@ -28,15 +29,12 @@ class UpdateImageService {
     }
 
     if (course.image) {
-      const courseImageFilePath = path.join(uploadConfig.directory, course.image);
-      const couserImageFileExistis = await fs.promises.stat(courseImageFilePath);
-
-      if (couserImageFileExistis) {
-        await fs.promises.unlink(courseImageFilePath);
-      }
+      await this.storageProvaider.deleteFile(course.image);
     }
 
-    course.image = imageFileName;
+    const fileName = await this.storageProvaider.saveFile(imageFileName);
+
+    course.image = fileName;
 
     await this.coursesRepository.save(course);
 

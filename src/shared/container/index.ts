@@ -1,5 +1,8 @@
 import { container } from 'tsyringe';
 
+import '@modules/users/providers';
+import './providers';
+
 import ICourseRepository from '@modules/courses/repositories/ICoursesRepository';
 import CoursesRepository from '@modules/courses/infra/typeorm/repositories/CoursesRepository';
 
